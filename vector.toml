@@ -1,0 +1,41 @@
+#                                    __   __  __
+#                                    \ \ / / / /
+#                                     \ V / / /
+#                                      \_/  \/
+#
+#                                    V E C T O R
+#                                   Configuration
+#
+# ------------------------------------------------------------------------------
+# Website: https://vector.dev
+# Docs: https://vector.dev/docs
+# Chat: https://chat.vector.dev
+# ------------------------------------------------------------------------------
+
+# Change this to use a non-default directory for Vector data storage:
+# data_dir = "/var/lib/vector"
+
+# Random Syslog-formatted logs
+[sources.ssh_logs]
+type = "file"
+include = [ "/var/log/auth.log" ]
+# Parse Syslog logs
+# See the Vector Remap Language reference for more info: https://vrl.dev
+[transforms.parse_logs]
+type = "sample"
+inputs = ["ssh_logs"]
+key_field = "Failed"
+rate = 1
+# Print parsed logs to stdout
+[sinks.elasticsearch]
+type = "elasticsearch"
+inputs = ["ssh_logs"]
+endpoints = ["http://localhost:9200"]
+#password = "cl-sh8671ZXCASD++12"
+#user = "kibanaadmin"
+# Vector's GraphQL API (disabled by default)
+# Uncomment to try it out with the `vector top` command or
+# in your browser at http://localhost:8686
+#[api]
+#enabled = true
+#address = "127.0.0.1:8686"
